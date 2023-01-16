@@ -8,6 +8,7 @@ import { Category } from "../category/entity/category.entity";
 import { CreateRestaurantInput } from "./dto/create-restaurant.dto";
 import { DeleteRestaurantInput, DeleteRestaurantOutput } from "./dto/delete-restaurant.dto";
 import { EditRestaurantInput, EditRestaurantOutput } from "./dto/edit-restaurant.dto";
+import { RestaurantInput, RestaurantOutput } from "./dto/restaurant.dto";
 import { RestaurantsOutput, RestaurantsInput } from "./dto/restaurants.dto";
 import { Restaurant } from "./entities/restaurants.entity";
 
@@ -54,7 +55,7 @@ export class RestaurantService {
             console.log(err)
             return {
                 ok: false,
-                error: 'Could not create restaurant'
+                error: 'Could not create restaurant.'
             }
         }
     }
@@ -96,7 +97,7 @@ export class RestaurantService {
             if (owner.id !== restaurant.ownerId) {
                 return {
                     ok: false,
-                    error: "You can't edit a restaurant that you don't own"
+                    error: "You can't edit a restaurant that you don't own."
                 }
             }
             let category: Category = null;
@@ -114,7 +115,7 @@ export class RestaurantService {
         } catch (err) {
             return {
                 ok: false,
-                error: 'Could not Edit Restaurant'
+                error: 'Could not Edit Restaurant.'
             }
         }
     }
@@ -130,13 +131,13 @@ export class RestaurantService {
             if (!restaurant) {
                 return {
                     ok: false,
-                    error: 'Restaurant Not found',
+                    error: 'Restaurant Not found.',
                 }
             }
             if (owner.id !== restaurant.ownerId) {
                 return {
                     ok: false,
-                    error: "You can't delete a restaurant that you don't own"
+                    error: "You can't delete a restaurant that you don't own."
                 }
             }
             await this.restaurants.delete(restaruantId)
@@ -144,7 +145,7 @@ export class RestaurantService {
         } catch (err) {
             return {
                 ok: false,
-                error: 'Could not delete restaurant'
+                error: 'Could not delete restaurant.'
             }
         }
     }
@@ -167,7 +168,33 @@ export class RestaurantService {
         } catch (err) {
             return {
                 ok: false,
-                error: 'Could not load restaurants'
+                error: 'Could not load restaurants.'
+            }
+        }
+    }
+
+    async findRestaurantById(
+        { restaurantId }: RestaurantInput
+    ): Promise<RestaurantOutput> {
+        try {
+            const restaurant = await this.restaurants.findOne({
+                where: { id: restaurantId },
+                relations: ['user']
+            });
+            if (!restaurant) {
+                return {
+                    ok: false,
+                    error: "Restaurant not found."
+                }
+            }
+            return {
+                ok: true,
+                restaurant: restaurant,
+            }
+        } catch (err) {
+            return {
+                ok: false,
+                error: "Could not find restaurant."
             }
         }
     }

@@ -6,6 +6,7 @@ import { User } from "src/users/entities/user.entity";
 import { CreateRestaurantInput, CreateRestaurantOutput } from "./dto/create-restaurant.dto";
 import { DeleteRestaurantInput, DeleteRestaurantOutput } from "./dto/delete-restaurant.dto";
 import { EditRestaurantInput, EditRestaurantOutput } from "./dto/edit-restaurant.dto";
+import { RestaurantInput, RestaurantOutput } from "./dto/restaurant.dto";
 import { RestaurantsInput, RestaurantsOutput } from "./dto/restaurants.dto";
 import { Restaurant } from "./entities/restaurants.entity";
 import { RestaurantService } from "./restaurants.service";
@@ -47,5 +48,13 @@ export class RestaurantResolver {
         restaurantsInput: RestaurantsInput
     ): Promise<RestaurantsOutput> {
         return this.restaurantService.allRestaurants(restaurantsInput)
+    }
+
+    @Query((returns) => RestaurantOutput)
+    restaurant(
+        @Args('input')
+        restaurantInput: RestaurantInput
+    ): Promise<RestaurantOutput> {
+        return this.restaurantService.findRestaurantById(restaurantInput)
     }
 }
