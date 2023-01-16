@@ -32,7 +32,7 @@ export class Restaurant extends CoreEntity {
     owner: User;
 
     @RelationId((restaurant: Restaurant) => restaurant.owner)
-    ownerId: string;
+    ownerId: number;
 
     @Field((type) => Category)
     @ManyToOne((type) => Category, (category) => category.restaurants, {

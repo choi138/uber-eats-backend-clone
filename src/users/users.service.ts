@@ -9,6 +9,7 @@ import { JwtService } from 'src/jwt/jwt.service';
 import { Verification } from './entities/verificatoin.entity';
 import { VerifyEmailInput, VerifyEmailOutput } from './dto/verify/verify-email.dto';
 import { EditProfileInput, EditProfileOutput } from './dto/user/edit-profile.dto';
+import { UsersInput, UsersOutput } from './dto/user/users.dto';
 
 @Injectable()
 export class UsersService {
@@ -18,9 +19,26 @@ export class UsersService {
     private readonly jwtService: JwtService,
   ) { }
 
-  // async getAlluser(){
-  //   const user = this.users.find()
-  //   return user
+  // async allusers({ page }: UsersInput): Promise<UsersOutput> {
+  //   try {
+  //     const [users, totalResults] = await this.users.findAndCount({
+  //       skip: (page - 1) * 25,
+  //       take: 25,
+  //       relations: ['restaurants']
+  //     })
+  //     console.log(users)
+  //     return {
+  //       ok: true,
+  //       results: users,
+  //       totalResults: totalResults,
+  //       totalPages: Math.ceil(totalResults / 25)
+  //     }
+  //   } catch (err) {
+  //     return {
+  //       ok: false,
+  //       error: 'Could not load users'
+  //     }
+  //   }
   // }
 
   async createAccount({

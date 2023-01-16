@@ -7,6 +7,7 @@ import { CreateAccountInput, CreateAccountOutput } from './dto/user/create-accou
 import { EditProfileInput, EditProfileOutput } from './dto/user/edit-profile.dto';
 import { LoginInput, LoginOutput } from './dto/user/login.dto';
 import { UserPorfileInput } from './dto/user/user-profile.dto';
+import { UsersInput, UsersOutput } from './dto/user/users.dto';
 import { VerifyEmailInput, VerifyEmailOutput } from './dto/verify/verify-email.dto';
 import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
@@ -15,9 +16,12 @@ import { UsersService } from './users.service';
 export class UsersResolver {
     constructor(private readonly usersService: UsersService) { }
 
-    // @Query((returns) => [User])
-    // getAll() {
-    //     return this.usersService.getAlluser();
+    // @Query((returns) => UsersOutput)
+    // users(
+    //     @Args('input')
+    //     usersInput: UsersInput
+    // ): Promise<UsersOutput> {
+    //     return this.usersService.allusers(usersInput);
     // }
 
     @Mutation((returns) => CreateAccountOutput)
