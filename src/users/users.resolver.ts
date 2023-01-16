@@ -3,6 +3,7 @@ import { Args, Mutation, Resolver, Query } from '@nestjs/graphql';
 import { AuthUser } from 'src/auth/auth-user.decorator';
 import { AuthGard } from 'src/auth/auth.guard';
 import { CreateAccountInput, CreateAccountOutput } from './dto/user/create-account.dto';
+import { EditProfileInput, EditProfileOutput } from './dto/user/edit-profile.dto';
 import { LoginInput, LoginOutput } from './dto/user/login.dto';
 import { UserPorfileInput } from './dto/user/user-profile.dto';
 import { VerifyEmailInput, VerifyEmailOutput } from './dto/verify/verify-email.dto';
@@ -43,5 +44,14 @@ export class UsersResolver {
         @Args('input') verifyEmailInput: VerifyEmailInput
     ): Promise<VerifyEmailOutput> {
         return this.usersService.verifyEmail(verifyEmailInput)
+    }
+
+    @Mutation((returns) => EditProfileOutput)
+    @UseGuards(AuthGard)
+    editProfile(
+        @AuthUser() authUser: User,
+        @Args('input') editProfileInput: EditProfileInput
+    ): Promise<EditProfileOutput> {
+        return this.usersService.editProfile(authUser.id, editProfileInput)
     }
 }

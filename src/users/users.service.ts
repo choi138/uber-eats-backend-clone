@@ -8,6 +8,7 @@ import { User } from './entities/user.entity';
 import { JwtService } from 'src/jwt/jwt.service';
 import { Verification } from './entities/verificatoin.entity';
 import { VerifyEmailInput, VerifyEmailOutput } from './dto/verify/verify-email.dto';
+import { EditProfileInput, EditProfileOutput } from './dto/user/edit-profile.dto';
 
 @Injectable()
 export class UsersService {
@@ -71,7 +72,7 @@ export class UsersService {
     }
   }
 
-  async findById({ userId }: UserPorfileInput): Promise<UserProfileOutput> {
+  async findById(userId: number): Promise<UserProfileOutput> {
     try {
       const user = await this.users.findOne({
         where: { id: userId },
@@ -111,6 +112,36 @@ export class UsersService {
       return {
         ok: false,
         error: 'Could not verify email.'
+      }
+    }
+  }
+
+  async editProfile(userId: number, { email, password }: EditProfileInput): Promise<EditProfileOutput> {
+    try {
+      const exists = await this.users.findOne({ where: { email: email } })
+      if (exists) {
+        return {
+          ok: false,
+          error: 'There is a user with that email.'
+        }
+      }
+      const user = await this.users.findOne({ where: { id: userId } })
+      if (email) {
+        user.email = email;
+        user.verified = false;
+        this.verifications.delete({ user: { id: user.id } })
+        await this.verifications.save(this.verifications.create({ user }))
+      }
+      if (password) {
+        user.password = password
+      }
+      await this.users.save(user)
+      return { ok: true }
+    } catch (err) {
+      console.log(err)
+      return {
+        ok: false,
+        error: 'Could not edit profile.'
       }
     }
   }
