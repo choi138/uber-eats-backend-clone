@@ -26,4 +26,9 @@ export class UsersResolver {
     ): Promise<LoginOutput> {
         return this.usersService.login(loginInput);
     }
+
+    @Query((returns) => User)
+    me(authUser: User) {
+        return authUser;
+    }
 }

@@ -72,7 +72,7 @@ export class UsersService {
 
   async findById(id: number): Promise<UserProfileOutput> {
     try {
-      const user = await this.users.findOne({ where: { id: id } });
+      const user = await this.users.findOne({ where: { id: id }, select: ['id', 'email', 'password', 'role', 'verified'] });
       return {
         ok: true,
         user: user
