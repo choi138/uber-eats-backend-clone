@@ -5,6 +5,7 @@ import { User } from "src/users/entities/user.entity";
 import { Repository } from "typeorm";
 import { Category } from "../category/entity/category.entity";
 import { CreateRestaurantInput } from "./dto/create-restaurant.dto";
+import { RestaurantsOutput, RestaurantsInput } from "./dto/restaurants.dto";
 import { Restaurant } from "./entities/restaurants.entity";
 
 @Injectable()
@@ -51,4 +52,26 @@ export class RestaurantService {
         }
     }
 
+    async allRestaurants(
+        { page }: RestaurantsInput
+    ): Promise<RestaurantsOutput> {
+        try {
+            const [restaurants, totalResults] = await this.restaurants.findAndCount({
+                skip: (page - 1) * 25,
+                take: 25,
+                relations: ['owner', 'category']
+            })
+            return {
+                ok: true,
+                results: restaurants,
+                totalResults: totalResults,
+                totalPages: Math.ceil(totalResults / 25),
+            };
+        } catch (err) {
+            return {
+                ok: false,
+                error: 'Could not load restaurants'
+            }
+        }
+    }
 }  
