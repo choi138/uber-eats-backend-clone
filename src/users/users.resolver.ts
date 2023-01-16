@@ -14,10 +14,10 @@ import { UsersService } from './users.service';
 export class UsersResolver {
     constructor(private readonly usersService: UsersService) { }
 
-    @Query((returns) => String)
-    sayHello(): string {
-        return 'Hello World!';
-    }
+    // @Query((returns) => [User])
+    // getAll() {
+    //     return this.usersService.getAlluser();
+    // }
 
     @Mutation((returns) => CreateAccountOutput)
     async createAccount(

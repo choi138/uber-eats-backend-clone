@@ -18,6 +18,11 @@ export class UsersService {
     private readonly jwtService: JwtService,
   ) { }
 
+  // async getAlluser(){
+  //   const user = this.users.find()
+  //   return user
+  // }
+
   async createAccount({
     email,
     password,

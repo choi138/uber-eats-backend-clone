@@ -10,6 +10,9 @@ import { Verification } from './users/entities/verificatoin.entity';
 import { JwtModule } from './jwt/jwt.module';
 import { JwtMiddleware } from './jwt/jwt.middleware';
 import { AuthModule } from './auth/auth.module';
+import { RestaurantsModule } from './restaurants/restaurants.module';
+import { Restaurant } from './restaurants/entities/restaurants.entity';
+import { Category } from './restaurants/entities/category.entity';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -36,7 +39,7 @@ import { AuthModule } from './auth/auth.module';
       synchronize: process.env.NODE_ENV != 'prod',
       // logging:
       //   process.env.NODE_ENV != 'prod' && process.env.NODE_ENV !== 'test',
-      entities: [User, Verification]
+      entities: [User, Verification, Restaurant, Category]
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
@@ -48,6 +51,7 @@ import { AuthModule } from './auth/auth.module';
     }),
     UsersModule,
     AuthModule,
+    RestaurantsModule,
   ],
   controllers: [],
   providers: [],
