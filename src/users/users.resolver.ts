@@ -1,4 +1,5 @@
 import { Args, Mutation, Resolver, Query } from '@nestjs/graphql';
+import { AuthUser } from 'src/auth/auth-user.decorator';
 import { CreateAccountInput, CreateAccountOutput } from './dto/user/create-account.dto';
 import { LoginInput, LoginOutput } from './dto/user/login.dto';
 import { User } from './entities/user.entity';
@@ -28,7 +29,7 @@ export class UsersResolver {
     }
 
     @Query((returns) => User)
-    me(authUser: User) {
+    me(@AuthUser() authUser: User) {
         return authUser;
     }
 }

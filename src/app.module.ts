@@ -9,6 +9,7 @@ import { User } from './users/entities/user.entity';
 import { Verification } from './users/entities/verificatoin.entity';
 import { JwtModule } from './jwt/jwt.module';
 import { JwtMiddleware } from './jwt/jwt.middleware';
+import { AuthModule } from './auth/auth.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -46,6 +47,7 @@ import { JwtMiddleware } from './jwt/jwt.middleware';
       secretKey: process.env.SECRET_KEY,
     }),
     UsersModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],
