@@ -10,7 +10,7 @@ export class JwtService {
     }
 
     sign(userId: number): string {
-        console.log(userId, "유저 아이디임")
+        // console.log(userId, "유저 아이디임")
         return jwt.sign({ id: userId }, this.options.secretKey)
     }
 

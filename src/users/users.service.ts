@@ -3,10 +3,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateAccountInput, CreateAccountOutput } from './dto/user/create-account.dto';
 import { LoginInput, LoginOutput } from './dto/user/login.dto';
-import { UserProfileOutput } from './dto/user/user-profile.dto';
+import { UserPorfileInput, UserProfileOutput } from './dto/user/user-profile.dto';
 import { User } from './entities/user.entity';
 import { JwtService } from 'src/jwt/jwt.service';
 import { Verification } from './entities/verificatoin.entity';
+import { VerifyEmailInput, VerifyEmailOutput } from './dto/verify/verify-email.dto';
 
 @Injectable()
 export class UsersService {
@@ -70,9 +71,12 @@ export class UsersService {
     }
   }
 
-  async findById(id: number): Promise<UserProfileOutput> {
+  async findById({ userId }: UserPorfileInput): Promise<UserProfileOutput> {
     try {
-      const user = await this.users.findOne({ where: { id: id }, select: ['id', 'email', 'password', 'role', 'verified'] });
+      const user = await this.users.findOne({
+        where: { id: userId },
+        select: ['id', 'email', 'password', 'role', 'verified']
+      });
       return {
         ok: true,
         user: user
@@ -81,6 +85,32 @@ export class UsersService {
       return {
         ok: false,
         error: 'User not found.'
+      }
+    }
+  }
+
+  async verifyEmail({ code }: VerifyEmailInput): Promise<VerifyEmailOutput> {
+    try {
+      const verification = await this.verifications.findOne({
+        where: { code: code },
+        relations: ['user']
+      })
+      if (!verification) {
+        return {
+          ok: false,
+          error: 'Verification not found.'
+        }
+      }
+      const verifyUser = verification.user;
+      verifyUser.verified = true;
+      await this.users.save(verifyUser)
+      await this.verifications.delete(verification.id)
+      return { ok: true }
+    } catch (err) {
+      console.log(err)
+      return {
+        ok: false,
+        error: 'Could not verify email.'
       }
     }
   }

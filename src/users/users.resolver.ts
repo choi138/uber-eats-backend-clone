@@ -4,6 +4,8 @@ import { AuthUser } from 'src/auth/auth-user.decorator';
 import { AuthGard } from 'src/auth/auth.guard';
 import { CreateAccountInput, CreateAccountOutput } from './dto/user/create-account.dto';
 import { LoginInput, LoginOutput } from './dto/user/login.dto';
+import { UserPorfileInput } from './dto/user/user-profile.dto';
+import { VerifyEmailInput, VerifyEmailOutput } from './dto/verify/verify-email.dto';
 import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
 
@@ -34,5 +36,12 @@ export class UsersResolver {
     @UseGuards(AuthGard)
     me(@AuthUser() authUser: User) {
         return authUser;
+    }
+
+    @Mutation((returns) => VerifyEmailOutput)
+    verifyEmail(
+        @Args('input') verifyEmailInput: VerifyEmailInput
+    ): Promise<VerifyEmailOutput> {
+        return this.usersService.verifyEmail(verifyEmailInput)
     }
 }
