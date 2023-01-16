@@ -7,6 +7,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { CommonModule } from './common/common.module';
 import { User } from './users/entities/user.entity';
+import { Verification } from './users/entities/verificatoin.entity';
 
 @Module({
   imports: [
@@ -31,7 +32,9 @@ import { User } from './users/entities/user.entity';
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
       synchronize: process.env.NODE_ENV != 'prod',
-      entities: [User]
+      logging:
+        process.env.NODE_ENV != 'prod' && process.env.NODE_ENV !== 'test',
+      entities: [User, Verification]
     }),
     GraphQLModule.forRoot({
       driver: ApolloDriver,
