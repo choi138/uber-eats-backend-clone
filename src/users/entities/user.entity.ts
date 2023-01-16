@@ -4,7 +4,7 @@ import { IsBoolean, IsEmail, IsString } from "class-validator";
 import { CoreEntity } from "src/common/entities/core.entity";
 import * as bcrypt from 'bcrypt'
 import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany } from "typeorm";
-import { Restaurant } from "src/restaurants/entities/restaurants.entity";
+import { Restaurant } from "src/restaurants/restaurants/entities/restaurants.entity";
 
 
 export enum UserRole {

@@ -10,9 +10,9 @@ import { Verification } from './users/entities/verificatoin.entity';
 import { JwtModule } from './jwt/jwt.module';
 import { JwtMiddleware } from './jwt/jwt.middleware';
 import { AuthModule } from './auth/auth.module';
-import { RestaurantsModule } from './restaurants/restaurants.module';
-import { Restaurant } from './restaurants/entities/restaurants.entity';
-import { Category } from './restaurants/entities/category.entity';
+import { Restaurant } from './restaurants/restaurants/entities/restaurants.entity';
+import { Category } from './restaurants/category/entity/category.entity';
+import { RestaurantsModule } from './restaurants/restaurants/restaurants.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
