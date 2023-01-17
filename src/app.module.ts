@@ -12,7 +12,7 @@ import { JwtMiddleware } from './jwt/jwt.middleware';
 import { AuthModule } from './auth/auth.module';
 import { Restaurant } from './restaurants/restaurants/entities/restaurants.entity';
 import { Category } from './restaurants/category/entity/category.entity';
-import { RestaurantsModule } from './restaurants/restaurants/restaurants.module';
+import { RestaurantsModule } from './restaurants/restaurants.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
