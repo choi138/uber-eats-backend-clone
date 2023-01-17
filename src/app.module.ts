@@ -13,6 +13,7 @@ import { AuthModule } from './auth/auth.module';
 import { Restaurant } from './restaurants/restaurants/entities/restaurants.entity';
 import { Category } from './restaurants/category/entity/category.entity';
 import { RestaurantsModule } from './restaurants/restaurants.module';
+import { Menu } from './restaurants/menu/entity/Menu.entity';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -39,7 +40,7 @@ import { RestaurantsModule } from './restaurants/restaurants.module';
       synchronize: process.env.NODE_ENV != 'prod',
       // logging:
       //   process.env.NODE_ENV != 'prod' && process.env.NODE_ENV !== 'test',
-      entities: [User, Verification, Restaurant, Category]
+      entities: [User, Verification, Restaurant, Category, Menu]
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,

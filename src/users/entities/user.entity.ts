@@ -40,7 +40,7 @@ export class User extends CoreEntity {
 
     @Field((type) => [Restaurant])
     @OneToMany((type) => Restaurant, (restaurant) => restaurant.owner)
-    restaurants: Restaurant
+    restaurant: Restaurant
 
     @BeforeInsert()
     @BeforeUpdate()
