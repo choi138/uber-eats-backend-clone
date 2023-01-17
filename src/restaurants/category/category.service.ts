@@ -20,7 +20,7 @@ export class CategoryService {
             const [categories, totalResults] = await this.categories.findAndCount({
                 skip: (page - 1) * 25,
                 take: 25,
-                relations: ['restaurants']
+                relations: ['restaurant']
             })
             return {
                 ok: true,

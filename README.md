@@ -39,10 +39,10 @@ The Backend of Nuber Eats Clone with nomad
 - See Restaurant
 - Search Restaurant
 
-## Dish
-- Create Dish
-- Edit Dish
-- Delete Dish
+### Menu
+- Create Menu
+- Edit Menu
+- Delete Menu
 
 ## Order
 - Orders CRUD

@@ -179,7 +179,7 @@ export class RestaurantService {
         try {
             const restaurant = await this.restaurants.findOne({
                 where: { id: restaurantId },
-                relations: ['user']
+                relations: ['menu', 'owner']
             });
             if (!restaurant) {
                 return {
@@ -192,9 +192,10 @@ export class RestaurantService {
                 restaurant: restaurant,
             }
         } catch (err) {
+            // console.log(err)
             return {
                 ok: false,
-                error: "Could not find restaurant."
+                error: "Could not load restaurant."
             }
         }
     }
