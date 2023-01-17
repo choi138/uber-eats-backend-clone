@@ -3,6 +3,7 @@ import { AuthUser } from "src/auth/auth-user.decorator";
 import { Role } from "src/auth/role.decorator";
 import { User } from "src/users/entities/user.entity";
 import { CreateMenuInput, CreateMenuOutput } from "./dto/create-menu.dto";
+import { DeleteMenuInput, DeleteMenuOutput } from "./dto/delete-menu.dto";
 import { EditMenuInput, EditMenuOutput } from "./dto/edit-menu.dto";
 import { Menu } from "./entity/Menu.entity";
 import { MenuService } from "./menu.service";
@@ -27,5 +28,14 @@ export class MenuResolver {
         @Args('input') editMenuInput: EditMenuInput
     ): Promise<EditMenuOutput> {
         return this.menuService.editMenu(owner, editMenuInput);
+    }
+
+    @Mutation((type) => DeleteMenuOutput)
+    @Role(['Owner'])
+    deleteMenu(
+        @AuthUser() owner: User,
+        @Args('input') deleteMenuInput: DeleteMenuInput
+    ): Promise<DeleteMenuOutput> {
+        return this.menuService.deleteMenu(owner, deleteMenuInput);
     }
 }

@@ -4,6 +4,7 @@ import { User } from "src/users/entities/user.entity";
 import { Repository } from "typeorm";
 import { Restaurant } from "../restaurants/entities/restaurants.entity";
 import { CreateMenuInput, CreateMenuOutput } from "./dto/create-menu.dto";
+import { DeleteMenuInput, DeleteMenuOutput } from "./dto/delete-menu.dto";
 import { EditMenuInput, EditMenuOutput } from "./dto/edit-menu.dto";
 import { Menu } from "./entity/Menu.entity";
 
@@ -27,19 +28,18 @@ export class MenuService {
             if (!restaurant) {
                 return {
                     ok: false,
-                    error: "Restaurant not found"
+                    error: "Restaurant not found."
                 }
             }
             if (owner.id !== restaurant.ownerId) {
                 return {
                     ok: false,
-                    error: "You can't do that"
+                    error: "You can't do that."
                 }
             }
             const dish = await this.menus.save(
                 this.menus.create({ ...createMenuInput, restaurant })
             )
-            console.log(dish)
             return { ok: true }
         } catch (err) {
             return {
@@ -48,6 +48,27 @@ export class MenuService {
             }
         }
     }
+
+    // async findMenu(menuId: number, owner: User) {
+    //     const menu = await this.menus.findOne({
+    //         where: { id: menuId },
+    //         relations: ['restaurant']
+    //     });
+    //     if (!menu) {
+    //         return {
+    //             ok: false,
+    //             error: "Menu not found."
+    //         }
+    //     }
+    //     console.log(menu.restaurant.ownerId, owner.id)
+    //     if (menu.restaurant.ownerId !== owner.id) {
+    //         return {
+    //             ok: false,
+    //             error: "You can't do that,"
+    //         }
+    //     }
+    //     return menu
+    // }
 
     async editMenu(
         owner: User,
@@ -67,18 +88,46 @@ export class MenuService {
             if (menu.restaurant.ownerId !== owner.id) {
                 return {
                     ok: false,
-                    error: "You can't do that"
+                    error: "You can't do that,"
                 }
             }
             await this.menus.save({ id: editMenuInput.menuId, ...editMenuInput })
-            return{
-                ok: true
-            }
+            return { ok: true }
         } catch (err) {
-            console.log(err)
             return {
                 ok: false,
-                error: 'Could not edit Menu.'
+                error: 'Could not edit menu.'
+            }
+        }
+    }
+
+    async deleteMenu(
+        owner: User,
+        { menuId }: DeleteMenuInput
+    ): Promise<DeleteMenuOutput> {
+        try {
+            const menu = await this.menus.findOne({
+                where: { id: menuId },
+                relations: ['restaurant']
+            });
+            if (!menu) {
+                return {
+                    ok: false,
+                    error: "Menu not found."
+                }
+            }
+            if (menu.restaurant.ownerId !== owner.id) {
+                return {
+                    ok: false,
+                    error: "You can't do that,"
+                }
+            }
+            await this.menus.delete(menuId);
+            return { ok: true }
+        } catch (err) {
+            return {
+                ok: false,
+                error: 'Could not delete menu'
             }
         }
     }
