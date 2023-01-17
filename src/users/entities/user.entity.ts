@@ -5,6 +5,7 @@ import { CoreEntity } from "src/common/entities/core.entity";
 import * as bcrypt from 'bcrypt'
 import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany } from "typeorm";
 import { Restaurant } from "src/restaurants/restaurants/entities/restaurants.entity";
+import { Order } from "src/orders/entitites/order.entity";
 
 
 export enum UserRole {
@@ -40,7 +41,15 @@ export class User extends CoreEntity {
 
     @Field((type) => [Restaurant])
     @OneToMany((type) => Restaurant, (restaurant) => restaurant.owner)
-    restaurant: Restaurant
+    restaurant: Restaurant[];
+
+    @Field((type) => [Order])
+    @OneToMany((type) => Order, (order) => order.customer)
+    orders: Order[];
+
+    @Field((type) => [Order])
+    @OneToMany((type) => Order, (order) => order.driver)
+    rides: Order[];
 
     @BeforeInsert()
     @BeforeUpdate()
