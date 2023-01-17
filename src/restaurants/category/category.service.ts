@@ -31,7 +31,7 @@ export class CategoryService {
         } catch (err) {
             return {
                 ok: false,
-                error: "Could not load categories"
+                error: "Could not load categories."
             }
         }
     }
@@ -50,14 +50,14 @@ export class CategoryService {
             if (!category) {
                 return {
                     ok: false,
-                    error: "Category not found"
+                    error: "Category not found."
                 }
             }
             const restaurants = await this.restaurants.find({
                 where: { category: { id: category.id } },
                 take: 25,
                 skip: (page - 1) * 25,
-                relations: ['owner']
+                relations: ['owner', 'menu']
             })
             const totalResults = await this.countRestaurant(category)
             return {
@@ -70,7 +70,7 @@ export class CategoryService {
         } catch (err) {
             return {
                 ok: false,
-                error: 'Could not load catory'
+                error: 'Could not load catory.'
             }
         }
     }
