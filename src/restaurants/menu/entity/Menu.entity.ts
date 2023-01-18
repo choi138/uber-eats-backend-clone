@@ -1,4 +1,4 @@
-import { Field, InputType, Int, ObjectType } from "@nestjs/graphql";
+import { Field, Float, InputType, Int, ObjectType } from "@nestjs/graphql";
 import { IsNumber, IsString, Length } from "class-validator";
 import { CoreEntity } from "src/common/entities/core.entity";
 import { Restaurant } from "src/restaurants/restaurants/entities/restaurants.entity";
@@ -10,7 +10,7 @@ export class MenuChoice {
     @Field((type) => String, { nullable: true })
     name?: string
 
-    @Field((type) => Int, { nullable: true })
+    @Field((type) => Float, { nullable: true })
     extra?: number
 }
 
@@ -23,7 +23,7 @@ export class MenuOption {
     @Field((type) => [MenuChoice], { nullable: true })
     choices?: MenuChoice[];
 
-    @Field((type) => Int, { nullable: true })
+    @Field((type) => Float, { nullable: true })
     extra?: number;
 }
 

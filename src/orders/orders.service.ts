@@ -2,9 +2,10 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Menu } from "src/restaurants/menu/entity/Menu.entity";
 import { Restaurant } from "src/restaurants/restaurants/entities/restaurants.entity";
-import { User } from "src/users/entities/user.entity";
+import { User, UserRole } from "src/users/entities/user.entity";
 import { Repository } from "typeorm";
 import { CreaetOrderOutput, CreateOrderInput } from "./dto/create-order.dto";
+import { GetOrdersInput, GetOrdersOutput } from "./dto/get-orders.dto";
 import { OrderItem } from "./entitites/order-items.dto";
 import { Order } from "./entitites/order.entity";
 
@@ -45,36 +46,39 @@ export class OrderService {
                     }
                 }
                 let menuFinalPrice = menu.price;
-                // console.log(menuFinalPrice, '초기 값')
                 for (const itemOption of item.options) {
-                    // console.log(itemOption, '옵션')
                     const menuOption = menu.options.find(
-                        (menuOptin) => menuOptin.name == itemOption.name
+                        (menuOption) => menuOption.name == itemOption.name
                     )
-                    // console.log(menuOption, '메뉴 옵션');
                     if (menuOption) {
                         if (menuOption.extra) {
-                            // console.log(`$USD + ${menuOption.extra}`);
                             menuFinalPrice = menuFinalPrice + menuOption.extra
-                        } else {
+                        }
+                        if (menuOption.choices) {
                             const menuOptionChoice = menuOption.choices.find(
                                 (optionChoice) => optionChoice.name === itemOption.choice
                             )
-                            // console.log(menuOptionChoice, '엄엄');
                             if (menuOptionChoice) {
                                 if (menuOptionChoice.extra) {
-                                    // console.log(`$USD + ${dishOptionChoice.extra}`);
                                     menuFinalPrice = menuFinalPrice + menuOptionChoice.extra
+                                }
+                            } else {
+                                return {
+                                    ok: false,
+                                    error: "There is no choice like that"
                                 }
                             }
                         }
-                    } else{
-                        return{
+                    }
+                    else {
+                        return {
                             ok: false,
                             error: 'There is not option like that'
                         }
                     }
+
                 }
+
 
                 orderFinalPrice = orderFinalPrice + menuFinalPrice;
                 // console.log(orderFinalPrice);
@@ -102,6 +106,7 @@ export class OrderService {
 
             return { ok: true }
         } catch (err) {
+            console.log(err)
             return {
                 ok: false,
                 error: "Could not create order"
@@ -109,5 +114,46 @@ export class OrderService {
         }
     }
 
-    // async getOrders(user: User, {status})
+    async getOrders(
+        user: User,
+        { status }: GetOrdersInput
+    ): Promise<GetOrdersOutput> {
+        try {
+            let orders: Order[];
+            if (user.role === UserRole.Client) {
+                orders = await this.orders.find({
+                    where: { customer: { id: user.id }, ...(status && { status }) },
+                    relations: ['items']
+                })
+            } else if (user.role === UserRole.Delivery) {
+                orders = await this.orders.find({
+                    where: { customer: { id: user.id }, ...(status && { status }) },
+                    relations: ['items']
+                })
+            } else if (user.role === UserRole.Owner) {
+                const restaurants = await this.restaurants.find({
+                    where: { id: user.id },
+                    relations: ['orders']
+                })
+                console.log(restaurants, '식당')
+                orders = restaurants.map((restaurant) => restaurant.orders).flat(1)
+
+                if (status) {
+                    orders = orders.filter((order) => order.status === status)
+                }
+            }
+
+            return {
+                ok: true,
+                orders: orders
+            }
+
+        } catch (err) {
+            console.log(err)
+            return {
+                ok: false,
+                error: "Could no load orders"
+            }
+        }
+    }
 }

@@ -50,7 +50,7 @@ export class Order extends CoreEntity {
     @JoinTable()
     items: OrderItem[];
 
-    @Column({nullable: true})
+    @Column({nullable: true, type: "float"})
     @Field((type) => Float, {nullable: true})
     @IsNumber()
     total?: number
