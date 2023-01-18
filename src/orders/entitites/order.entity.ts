@@ -11,7 +11,7 @@ export enum OrderStatus {
     Cooking = 'Cooking',
     Cooked = 'Cooked',
     PickedUp = 'Pickedup',
-    Deliverd = 'Deliverd'
+    Delivered = 'Delivered'
 }
 registerEnumType(OrderStatus, {name: 'OrderStatus'})
 
