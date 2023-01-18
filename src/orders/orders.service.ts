@@ -5,6 +5,7 @@ import { Restaurant } from "src/restaurants/restaurants/entities/restaurants.ent
 import { User, UserRole } from "src/users/entities/user.entity";
 import { Repository } from "typeorm";
 import { CreaetOrderOutput, CreateOrderInput } from "./dto/create-order.dto";
+import { GetOrderInput, GetOrderOutput } from "./dto/get-order.dto";
 import { GetOrdersInput, GetOrdersOutput } from "./dto/get-orders.dto";
 import { OrderItem } from "./entitites/order-items.dto";
 import { Order } from "./entitites/order.entity";
@@ -29,7 +30,7 @@ export class OrderService {
             if (!restaurant) {
                 return {
                     ok: false,
-                    error: 'Restaurant not found'
+                    error: 'Restaurant not found.'
                 }
             }
 
@@ -42,7 +43,7 @@ export class OrderService {
                 if (!menu) {
                     return {
                         ok: false,
-                        error: 'Could not found menu'
+                        error: 'Could not found menu.'
                     }
                 }
                 let menuFinalPrice = menu.price;
@@ -65,7 +66,7 @@ export class OrderService {
                             } else {
                                 return {
                                     ok: false,
-                                    error: "There is no choice like that"
+                                    error: "There is no choice like that."
                                 }
                             }
                         }
@@ -73,7 +74,7 @@ export class OrderService {
                     else {
                         return {
                             ok: false,
-                            error: 'There is not option like that'
+                            error: 'There is not option like that.'
                         }
                     }
 
@@ -109,7 +110,7 @@ export class OrderService {
             console.log(err)
             return {
                 ok: false,
-                error: "Could not create order"
+                error: "Could not create order."
             }
         }
     }
@@ -152,7 +153,54 @@ export class OrderService {
             console.log(err)
             return {
                 ok: false,
-                error: "Could no load orders"
+                error: "Could no get orders."
+            }
+        }
+    }
+
+    canSeeOrder(user: User, order: Order): boolean {
+        let canSee = true;
+        if (user.role == UserRole.Client && order.customerId !== user.id) {
+            canSee = false
+        }
+        if (user.role == UserRole.Delivery && order.driverId !== user.id) {
+            canSee = false
+        }
+        if (user.role == UserRole.Owner && order.restaurant.ownerId !== user.id) {
+            canSee = false
+        }
+        return canSee
+    }
+
+    async getOrder(
+        user: User,
+        { id: orderId }: GetOrderInput
+    ): Promise<GetOrderOutput> {
+        try {
+            const order = await this.orders.findOne({
+                where: { id: orderId },
+                relations: ['restaurant', 'items']
+            })
+            if (!order) {
+                return {
+                    ok: false,
+                    error: 'Order not found.'
+                }
+            }
+            if (!this.canSeeOrder(user, order)) {
+                return {
+                    ok: false,
+                    error: "You can't see that."
+                }
+            }
+            return {
+                ok: true,
+                order: order
+            }
+        } catch (err) {
+            return {
+                ok: false,
+                error: 'Could not get order.'
             }
         }
     }
